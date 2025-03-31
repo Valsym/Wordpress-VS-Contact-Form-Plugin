@@ -1,5 +1,11 @@
 <?php
+/*
+ * Wp contact form Shortcode
+ * A shortcode created to display a contact form when used in the post or page editor
+ */
 
+
+//defines the functionality for the contact form shortcode
 class vs_contact_form_shortcode {
 
     //on initialize
@@ -19,12 +25,13 @@ class vs_contact_form_shortcode {
         global $vs_contact_form;
 
         ob_start();
-        $vs_contact_form->deliver_mail();
-        $vs_contact_form->html_form_code();
+        echo $vs_contact_form->deliver_mail();
+        echo $vs_contact_form->html_form_code();
         return ob_get_clean();
     }
 
 }
+
 $vs_contact_form_shortcode = new vs_contact_form_shortcode;
 
 ?>
