@@ -20,31 +20,37 @@ class vs_contact_form {
     }
 
     public function html_form_code() {
-        echo '<p>Пожалуйста, введите ваши контактные данные и короткое сообщение ниже, и мы постараемся ответить на ваш запрос как можно скорее.</p>';
-        echo '<form action="' . esc_url( $_SERVER['REQUEST_URI'] ) . '" method="post">';
-        echo '<p>';
-        echo 'Ваше имя (*) <br />';
-        echo '<input type="text" name="cf-name" pattern="[a-zA-Z0-9а-яА-Я ]+" value="' . ( isset( $_POST["cf-name"] ) ? esc_attr( $_POST["cf-name"] ) : '' ) . '" size="40" placeholder="Your Name" />';
-        echo '</p>';
-        echo '<p>';
-        echo 'Ваш Email (*) <br />';
-        echo '<input type="email" name="cf-email" value="' . ( isset( $_POST["cf-email"] ) ? esc_attr( $_POST["cf-email"] ) : '' ) . '" size="40" placeholder="Your Email" />';
-        echo '</p>';
-        echo '<p>';
-        echo 'Тема сообщения (*) <br />';
-        echo '<input type="text" name="cf-subject" pattern="[a-zA-Zа-яА-Я ]+" value="' . ( isset( $_POST["cf-subject"] ) ? esc_attr( $_POST["cf-subject"] ) : '' ) . '" size="40" placeholder="Subject" />';
-        echo '</p>';
-        echo '<p>';
-        echo 'Ваше сообщение (*) <br />';
-        echo '<textarea rows="10" cols="35" name="cf-message" placeholder="Your Message">' . ( isset( $_POST["cf-message"] ) ? esc_attr( $_POST["cf-message"] ) : '' ) . '</textarea>';
-        echo '</p>';
-        echo '<p><input type="submit" name="cf-submitted" value="Send"/></p>';
-        echo '<p>* - required</p>';
-        echo '</form>';
+        //output
+        $html = '';
+        $html .= '<p>Пожалуйста, введите ваши контактные данные и короткое сообщение ниже, и мы постараемся ответить на ваш запрос как можно скорее.</p>';
+        $html .= '<form action="' . esc_url( $_SERVER['REQUEST_URI'] ) . '" method="post">';
+        $html .= '<p>';
+        $html .= 'Ваше имя (*) <br />';
+        $html .= '<input type="text" name="cf-name" pattern="[a-zA-Z0-9а-яА-Я ]+" value="' . ( isset( $_POST["cf-name"] ) ? esc_attr( $_POST["cf-name"] ) : '' ) . '" size="40" placeholder="Your Name" />';
+        $html .= '</p>';
+        $html .= '<p>';
+        $html .= 'Ваш Email (*) <br />';
+        $html .= '<input type="email" name="cf-email" value="' . ( isset( $_POST["cf-email"] ) ? esc_attr( $_POST["cf-email"] ) : '' ) . '" size="40" placeholder="Your Email" />';
+        $html .= '</p>';
+        $html .= '<p>';
+        $html .= 'Тема сообщения (*) <br />';
+        $html .= '<input type="text" name="cf-subject" pattern="[a-zA-Zа-яА-Я ]+" value="' . ( isset( $_POST["cf-subject"] ) ? esc_attr( $_POST["cf-subject"] ) : '' ) . '" size="40" placeholder="Subject" />';
+        $html .= '</p>';
+        $html .= '<p>';
+        $html .= 'Ваше сообщение (*) <br />';
+        $html .= '<textarea rows="10" cols="35" name="cf-message" placeholder="Your Message">' . ( isset( $_POST["cf-message"] ) ? esc_attr( $_POST["cf-message"] ) : '' ) . '</textarea>';
+        $html .= '</p>';
+        $html .= '<p><input type="submit" name="cf-submitted" value="Send"/></p>';
+        $html .= '<p>* - required</p>';
+        $html .= '</form>';
+
+        return $html;
     }
+    
     public function deliver_mail() {
         // if the submit button is clicked, send the email
         if ( isset( $_POST['cf-submitted'] ) ) {
+
             // sanitize form values
             $name    = sanitize_text_field( $_POST["cf-name"] );
             $email   = sanitize_email( $_POST["cf-email"] );
@@ -53,14 +59,16 @@ class vs_contact_form {
             // get the blog administrator's email address
             $to = get_option( 'admin_email' );
             $headers = "From: $name <$email>" . "\r\n";
-            // If email has been process for sending, display a success message
+            // If email has been process for sending, return a success message
+            $html = '';
             if ( wp_mail( $to, $subject, $message, $headers ) ) {
-                echo '<div>';
-                echo '<p>Спасибо, что связались со мной, ожидайте ответа в ближайшее время.</p>';
-                echo '</div>';
+                $html .= '<div>';
+                $html .= '<p>Спасибо, что связались со мной, ожидайте ответа в ближайшее время.</p>';
+                $html .= '</div>';
             } else {
-                echo 'Произошла ошибка. Попробуйте еще раз.';
+                $html .= 'Произошла ошибка. Попробуйте еще раз.';
             }
+            return $html;
         }
     }
 
