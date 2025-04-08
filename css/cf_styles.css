@@ -1,0 +1,41 @@
+.field-container{
+    max-width: 100%;
+    width: 750%;
+    height: auto;
+    padding-left: 10px;
+    padding-top: 10px;
+    border: 1px solid #876d04;
+    border-radius: 15px;
+}
+.field-container .field{
+	margin-bottom: 10px;
+}
+.field-container label,
+.field-container small,
+.field-container input,
+.field-container textarea{
+	display: block;
+}
+.field-container label{
+	margin-bottom: 3px;
+}
+.field-container small{
+	margin-bottom: 3px;
+}
+.field-container input,
+.field-container textarea{
+	max-width: 500px;
+	width: 100%;
+	height: auto;
+	border: 1px solid #876d04 !important;
+	border-radius: 15px !important;
+}
+
+.field-container input {
+    max-width: 300px;
+}
+
+.field-container input[type="submit"], 
+.field-container button {
+    max-width: 150px;
+}
