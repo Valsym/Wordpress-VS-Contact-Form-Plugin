@@ -3,7 +3,7 @@
 Plugin Name: VS Contact Form Plugin
 Plugin URI:  https://github.com/Valsym/Wordpress-VS-Contact-Form-Plugin/
 Description: Creates an interfaces to manage contact form on your website. Useful for showing contact form based information quickly. Includes both a widget and shortcode for ease of use.
-Version:     1.0.0
+Version:     2.0.0
 Author:      Valery Simonov
 Author URI:  https://github.com/Valsym/
 License:     GPL2
@@ -14,6 +14,7 @@ class vs_contact_form {
 
     public function __construct(){
 
+        add_action('wp_enqueue_scripts', array($this,'enqueue_public_scripts_and_styles')); // scripts and styles
         register_activation_hook(__FILE__, array($this,'plugin_activate')); //activate hook
         register_deactivation_hook(__FILE__, array($this,'plugin_deactivate')); //deactivate hook
 
@@ -21,32 +22,31 @@ class vs_contact_form {
 
     public function html_form_code() {
         //output
-        $html = '';
-        $html .= '<p>Пожалуйста, введите ваши контактные данные и короткое сообщение ниже, и мы постараемся ответить на ваш запрос как можно скорее.</p>';
+        $html = '<div class="field-container">';
+        $html .= '<p>Пожалуйста, введите ваши контактные данные и короткое сообщение ниже,<br> и я постараюсь ответить на ваш запрос как можно скорее.</p>';
         $html .= '<form action="' . esc_url( $_SERVER['REQUEST_URI'] ) . '" method="post">';
-        $html .= '<p>';
+        $html .= '<p class="field">';
         $html .= 'Ваше имя (*) <br />';
         $html .= '<input type="text" name="cf-name" pattern="[a-zA-Z0-9а-яА-Я ]+" value="' . ( isset( $_POST["cf-name"] ) ? esc_attr( $_POST["cf-name"] ) : '' ) . '" size="40" placeholder="Your Name" />';
         $html .= '</p>';
-        $html .= '<p>';
+        $html .= '<p class="field">';
         $html .= 'Ваш Email (*) <br />';
         $html .= '<input type="email" name="cf-email" value="' . ( isset( $_POST["cf-email"] ) ? esc_attr( $_POST["cf-email"] ) : '' ) . '" size="40" placeholder="Your Email" />';
         $html .= '</p>';
-        $html .= '<p>';
+        $html .= '<p class="field">';
         $html .= 'Тема сообщения (*) <br />';
         $html .= '<input type="text" name="cf-subject" pattern="[a-zA-Zа-яА-Я ]+" value="' . ( isset( $_POST["cf-subject"] ) ? esc_attr( $_POST["cf-subject"] ) : '' ) . '" size="40" placeholder="Subject" />';
         $html .= '</p>';
-        $html .= '<p>';
+        $html .= '<p class="field">';
         $html .= 'Ваше сообщение (*) <br />';
         $html .= '<textarea rows="10" cols="35" name="cf-message" placeholder="Your Message">' . ( isset( $_POST["cf-message"] ) ? esc_attr( $_POST["cf-message"] ) : '' ) . '</textarea>';
         $html .= '</p>';
-        $html .= '<p><input type="submit" name="cf-submitted" value="Send"/></p>';
-        $html .= '<p>* - required</p>';
-        $html .= '</form>';
+        $html .= '<p><input type="submit" name="cf-submitted" value="Отправить"/></p>';
+        $html .= '<p>* - требуется ввести данные</p>';
+        $html .= '</form></div>';
 
         return $html;
     }
-    
     public function deliver_mail() {
         // if the submit button is clicked, send the email
         if ( isset( $_POST['cf-submitted'] ) ) {
@@ -70,8 +70,14 @@ class vs_contact_form {
             }
             return $html;
         }
+    
     }
 
+    //enqueues scripts and styled on the front end
+	public function enqueue_public_scripts_and_styles(){
+		wp_enqueue_style('cf_styles', plugin_dir_url(__FILE__). '/css/cf_styles.css');
+		
+	}
 
 }
 $vs_contact_form = new vs_contact_form;
